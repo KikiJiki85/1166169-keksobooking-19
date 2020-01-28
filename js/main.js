@@ -6,17 +6,23 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
-// Функция создания случайного массива чисел от 1 до 8 для адресов изображений
-var getRandomNumArray = function () {
-  var rndArray = [];
-  while (rndArray.length < 8) {
-    var rndNumber = getRandomNumber(1, 8);
-    if (rndArray.indexOf(rndNumber) === -1) {
-      rndArray.push(rndNumber);
-    }
+// Функция перемешивания массива
+var getShuffledArray = function (arr) {
+  var j = 0;
+  var temp = 0;
+  for (var i = arr.length - 1; i > 0; i--) {
+    j = getRandomNumber(0, i);
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
   }
-  return rndArray;
+  return arr;
 };
+
+var pinTemplate = document.querySelector('#pin').content;
+
+// Строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д.
+var avatarPhotoNumberArr = ['01', '02', '03', '04', '05', '06', '07', '08'];
 
 // Строка с одним из четырёх фиксированных значений:
 var offerType = ['palace', 'flat', 'house', 'bungalo'];
@@ -40,16 +46,17 @@ var offerPhotosArr = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
+// Функция генерации моки (массива объектов тестовых данных)
 var createObjectsArray = function () {
   var objectsArray = [];
-  var rndNumberArray = getRandomNumArray();
+  var rndAvatarArr = getShuffledArray(avatarPhotoNumberArr);
   for (var i = 0; i < 8; i++) {
     var pinObject = {
       author: {
-        avatar: 'img/avatars/user0' + rndNumberArray[i] + '.png'
+        avatar: 'img/avatars/user' + rndAvatarArr[i] + '.png'
       },
       offer: {
-        title: 'OfferTitle',
+        title: 'OfferTitle' + (i + 1),
         address: getRandomNumber(550, 600) + ', ' + getRandomNumber(300, 350),
         price: getRandomNumber(100, 1000),
         type: offerType[getRandomNumber(0, offerType.length - 1)],
@@ -71,7 +78,22 @@ var createObjectsArray = function () {
   return objectsArray;
 };
 
+// Функция подготовки шаблона и вставки меток
+var renderPins = function (array) {
+  var pinTemplateObject = pinTemplate.querySelector('.map__pin');
+
+  for (var i = 0; i < array.length; i++) {
+    var newPin = pinTemplateObject.cloneNode(true);
+    newPin.style.left = (array[i].location.x - 25) + 'px';
+    newPin.style.top = (array[i].location.y - 70) + 'px';
+    newPin.querySelector('img').src = array[i].author.avatar;
+    newPin.querySelector('img').alt = array[i].offer.title;
+    document.querySelector('.map__pins').appendChild(newPin);
+  }
+};
 
 // Это временное решение, этот класс переключает карту из неактивного состояния в активное.
 document.querySelector('.map--faded').classList.remove('map--faded');
-createObjectsArray();
+var someTestArr = createObjectsArray();
+renderPins(someTestArr);
+
