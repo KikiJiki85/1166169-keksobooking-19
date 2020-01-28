@@ -47,10 +47,10 @@ var offerPhotosArr = [
 ];
 
 // Функция генерации моки (массива объектов тестовых данных)
-var createObjectsArray = function () {
+var createObjectsArray = function (objQuantity) {
   var objectsArray = [];
   var rndAvatarArr = getShuffledArray(avatarPhotoNumberArr);
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < objQuantity; i++) {
     var pinObject = {
       author: {
         avatar: 'img/avatars/user' + rndAvatarArr[i] + '.png'
@@ -69,7 +69,7 @@ var createObjectsArray = function () {
         photos: offerPhotosArr[getRandomNumber(0, offerPhotosArr.length - 1)],
       },
       location: {
-        x: getRandomNumber(100, 200),
+        x: getRandomNumber(100, 1100),
         y: getRandomNumber(130, 630)
       }
     };
@@ -94,6 +94,6 @@ var renderPins = function (array) {
 
 // Это временное решение, этот класс переключает карту из неактивного состояния в активное.
 document.querySelector('.map--faded').classList.remove('map--faded');
-var someTestArr = createObjectsArray();
+var someTestArr = createObjectsArray(8);
 renderPins(someTestArr);
 
