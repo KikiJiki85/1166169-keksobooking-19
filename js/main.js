@@ -6,23 +6,7 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
-// Функция перемешивания массива
-var getShuffledArray = function (arr) {
-  var j = 0;
-  var temp = 0;
-  for (var i = arr.length - 1; i > 0; i--) {
-    j = getRandomNumber(0, i);
-    temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-  }
-  return arr;
-};
-
 var pinTemplate = document.querySelector('#pin').content;
-
-// Строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д.
-var avatarPhotoNumberArr = ['01', '02', '03', '04', '05', '06', '07', '08'];
 
 // Строка с одним из четырёх фиксированных значений:
 var offerType = ['palace', 'flat', 'house', 'bungalo'];
@@ -49,11 +33,10 @@ var offerPhotosArr = [
 // Функция генерации моки (массива объектов тестовых данных)
 var createObjectsArray = function (objQuantity) {
   var objectsArray = [];
-  var rndAvatarArr = getShuffledArray(avatarPhotoNumberArr);
   for (var i = 0; i < objQuantity; i++) {
     var pinObject = {
       author: {
-        avatar: 'img/avatars/user' + rndAvatarArr[i] + '.png'
+        avatar: 'img/avatars/user' + (i + 1) + '.png'
       },
       offer: {
         title: 'OfferTitle' + (i + 1),
