@@ -7,6 +7,7 @@ var getRandomNumber = function (min, max) {
 };
 
 var pinTemplate = document.querySelector('#pin').content;
+var cardTemplate = document.querySelector('#card').content;
 
 // Строка с одним из четырёх фиксированных значений:
 var offerType = ['palace', 'flat', 'house', 'bungalo'];
@@ -19,6 +20,15 @@ var offerCheckout = ['12:00', '13:00', '14:00'];
 
 // Массив строк случайной длины из ниже предложенных
 var offerFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+
+var createRandomLengthArray = function (arr) {
+  var rndArray = [];
+  var rndArrayLength = getRandomNumber(1, arr.length);
+  for (var i = 0; i < rndArrayLength; i++) {
+    rndArray.push(arr[i]);
+  }
+  return rndArray;
+};
 
 // Строка с описанием
 var offerDescription = 'Offer description';
@@ -36,7 +46,7 @@ var createObjectsArray = function (objQuantity) {
   for (var i = 0; i < objQuantity; i++) {
     var pinObject = {
       author: {
-        avatar: 'img/avatars/user' + (i + 1) + '.png'
+        avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
       offer: {
         title: 'OfferTitle' + (i + 1),
@@ -47,9 +57,9 @@ var createObjectsArray = function (objQuantity) {
         guests: getRandomNumber(1, 5),
         checkin: offerCheckin[getRandomNumber(0, offerCheckin.length - 1)],
         checkout: offerCheckout[getRandomNumber(0, offerCheckout.length - 1)],
-        features: offerFeatures[getRandomNumber(0, offerFeatures.length - 1)],
+        features: createRandomLengthArray(offerFeatures),
         description: offerDescription,
-        photos: offerPhotosArr[getRandomNumber(0, offerPhotosArr.length - 1)],
+        photos: createRandomLengthArray(offerPhotosArr),
       },
       location: {
         x: getRandomNumber(100, 1100),
@@ -61,7 +71,7 @@ var createObjectsArray = function (objQuantity) {
   return objectsArray;
 };
 
-// Функция подготовки шаблона и вставки меток
+// Функция подготовки шаблона Pins и вставки меток
 var renderPins = function (array) {
   var pinTemplateObject = pinTemplate.querySelector('.map__pin');
 
@@ -75,8 +85,57 @@ var renderPins = function (array) {
   }
 };
 
+var renderCard = function (element) {
+  var newCard = cardTemplate.cloneNode(true);
+  newCard.querySelector('.popup__title').textContent = element.offer.title;
+  newCard.querySelector('.popup__text--address').textContent = element.offer.address;
+  newCard.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
+
+  switch (element.offer.type) {
+    case 'flat':
+      newCard.querySelector('.popup__type').textContent = 'Квартира';
+      break;
+    case 'bungalo':
+      newCard.querySelector('.popup__type').textContent = 'Бунгало';
+      break;
+    case 'house':
+      newCard.querySelector('.popup__type').textContent = 'Дом';
+      break;
+    case 'palace':
+      newCard.querySelector('.popup__type').textContent = 'Дворец';
+      break;
+  }
+  newCard.querySelector('.popup__text--capacity').textContent = element.offer.rooms + ' комнаты для ' + element.offer.guests + ' гостей';
+  newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
+
+  // В список .popup__features выведите все доступные удобства в объявлении.
+  newCard.querySelector('.popup__features').innerHTML = '';
+  for (var i = 0; i < element.offer.features.length; i++) {
+    var featureElement = document.createElement('li');
+    featureElement.classList.add('popup__feature');
+    featureElement.classList.add('popup__feature--' + element.offer.features[i]);
+    newCard.querySelector('.popup__features').appendChild(featureElement);
+  }
+
+  newCard.querySelector('.popup__description').textContent = element.offer.description;
+
+  // В блок .popup__photos выведите все фотографии из списка offer.photos. Каждая из строк массива photos должна записываться как src соответствующего изображения.
+  newCard.querySelector('.popup__photos').innerHTML = '';
+  for (var j = 0; j < element.offer.photos.length; j++) {
+    var offerPhoto = document.createElement('img');
+    offerPhoto.classList.add('popup__photo');
+    offerPhoto.src = element.offer.photos[j];
+    offerPhoto.width = 45;
+    offerPhoto.height = 40;
+    newCard.querySelector('.popup__photos').appendChild(offerPhoto);
+  }
+
+  newCard.querySelector('.popup__avatar').src = element.author.avatar;
+  document.querySelector('.map').insertBefore(newCard, document.querySelector('.map__filters-container'));
+};
+
 // Это временное решение, этот класс переключает карту из неактивного состояния в активное.
 document.querySelector('.map--faded').classList.remove('map--faded');
 var someTestArr = createObjectsArray(8);
 renderPins(someTestArr);
-
+renderCard(someTestArr[0]);
