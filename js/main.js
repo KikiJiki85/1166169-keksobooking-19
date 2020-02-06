@@ -1,5 +1,36 @@
 'use strict';
 
+var ENTER_KEY = 'Enter';
+var LABEL_CENTER = 33;
+var PIN_POINTER_X = 33;
+var PIN_POINTER_Y = 84;
+
+// Словарь соответствия изменения количества комнат и количества гостей
+var ROOMS_FOR_GUESTS = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+var rooms = document.querySelector('#room_number');
+var guests = document.querySelector('#capacity');
+
+function validateGuests() {
+  var validGuestsOptions = ROOMS_FOR_GUESTS[rooms.value]; // Валидные опции из словаря
+  var guestsOptions = guests.querySelectorAll('option'); // Находим все опции по количеству мест (гостям)
+  guestsOptions.forEach(function (currentOption) { // Перебор всех доступных опций в коллекции
+    currentOption.disabled = true;
+    currentOption.selected = false;
+    var index = validGuestsOptions.indexOf(currentOption.value); // Находим в саиске валидных опций нашу опцию
+    if (index >= 0) {
+      currentOption.disabled = false;
+      if (index === 0) {
+        currentOption.selected = true;
+      }
+    }
+  });
+}
+
 // Функция выбора случайного числа
 var getRandomNumber = function (min, max) {
   var randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
@@ -62,10 +93,6 @@ var offerPhotosArr = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-var ENTER_KEY = 'Enter';
-var LABEL_CENTER = 33;
-var PIN_POINTER_X = 33;
-var PIN_POINTER_Y = 84;
 var mapPinMain = document.querySelector('.map__pin--main');
 
 // Функция создания и отрисовки доступных фотографий в карточке
@@ -87,57 +114,6 @@ var setFormDisableAttr = function (form, field, attrStatus) {
   var inputArray = document.querySelector(form).querySelectorAll(field);
   for (var i = 0; i < inputArray.length; i++) {
     inputArray[i].disabled = attrStatus;
-  }
-};
-
-var roomQuantity = document.querySelector('#room_number');
-var roomCapacity = document.querySelector('#capacity');
-var roomCapacityOptions = roomCapacity.querySelectorAll('option');
-
-// Функция обработчика события изменения количества комнат и количества гостей
-var selectRoomQuantityChangeHandler = function () {
-  if (roomQuantity.value === '1') {
-    setFormDisableAttr('#capacity', 'option', '');
-    for (var i = 0; i < roomCapacityOptions.length; i++) {
-      if (roomCapacityOptions[i].value !== '1') {
-        roomCapacityOptions[i].disabled = 'disabled';
-      } else if (roomCapacityOptions[i].value === '1') {
-        roomCapacityOptions[i].selected = 'selected';
-      }
-    }
-  } else if (roomQuantity.value === '2') {
-    setFormDisableAttr('#capacity', 'option', '');
-    for (var j = 0; j < roomCapacityOptions.length; j++) {
-      switch (roomCapacityOptions[j].value) {
-        case '0':
-          roomCapacityOptions[j].disabled = 'disabled';
-          break;
-        case '3':
-          roomCapacityOptions[j].disabled = 'disabled';
-          break;
-        case '1':
-          roomCapacityOptions[j].selected = 'selected';
-          break;
-      }
-    }
-  } else if (roomQuantity.value === '3') {
-    setFormDisableAttr('#capacity', 'option', '');
-    for (var k = 0; k < roomCapacityOptions.length; k++) {
-      if (roomCapacityOptions[k].value === '0') {
-        roomCapacityOptions[k].disabled = 'disabled';
-      } else if (roomCapacityOptions[k].value === '1') {
-        roomCapacityOptions[k].selected = 'selected';
-      }
-    }
-  } else if (roomQuantity.value === '100') {
-    setFormDisableAttr('#capacity', 'option', '');
-    for (var l = 0; l < roomCapacityOptions.length; l++) {
-      if (roomCapacityOptions[l].value !== '0') {
-        roomCapacityOptions[l].disabled = 'disabled';
-      } else if (roomCapacityOptions[l].value === '0') {
-        roomCapacityOptions[l].selected = 'selected';
-      }
-    }
   }
 };
 
@@ -226,19 +202,19 @@ var createObjectsArray = function (objQuantity) {
 createObjectsArray(8);
 
 // Установка неактивного состояния п 1.1 ТЗ
-setFormDisableAttr('.ad-form', 'fieldset', 'disabled');
-setFormDisableAttr('.map__filters', 'select', 'disabled');
-setFormDisableAttr('.map__filters', 'fieldset', 'disabled');
+setFormDisableAttr('.ad-form', 'fieldset', true);
+setFormDisableAttr('.map__filters', 'select', true);
+setFormDisableAttr('.map__filters', 'fieldset', true);
 setPinAdress(LABEL_CENTER, LABEL_CENTER);
 
 // Функция перевода страницы в активное состояние п 1.2 ТЗ
 var setActiveState = function () {
   document.querySelector('.map--faded').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  setFormDisableAttr('.ad-form', 'fieldset', '');
-  setFormDisableAttr('.map__filters', 'select', '');
-  setFormDisableAttr('.map__filters', 'fieldset', '');
-  selectRoomQuantityChangeHandler();
+  setFormDisableAttr('.ad-form', 'fieldset', false);
+  setFormDisableAttr('.map__filters', 'select', false);
+  setFormDisableAttr('.map__filters', 'fieldset', false);
+  validateGuests();
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -256,4 +232,4 @@ mapPinMain.addEventListener('keydown', function (evt) {
 });
 
 // Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
-roomQuantity.addEventListener('change', selectRoomQuantityChangeHandler);
+rooms.addEventListener('change', validateGuests);
