@@ -18,14 +18,14 @@ var ROOMS_FOR_GUESTS = {
 var offerType = ['palace', 'flat', 'house', 'bungalo'];
 
 // Словарь
-var housingTypes = {
+var HousingTypes = {
   'palace': 'Дворец',
   'flat': 'Квартира',
   'house': 'Дом',
   'bungalo': 'Бунгало'
 };
 
-var housingTypesMinCost = {
+var HousingTypesMinCost = {
   'palace': '10000',
   'flat': '1000',
   'house': '5000',
@@ -90,8 +90,8 @@ var validateHousingTypes = function () {
   var selectedRoomTypes = roomType.querySelectorAll('option');
   selectedRoomTypes.forEach(function (currentOption) {
     if (roomType.value === currentOption.value) {
-      document.querySelector('#price').min = housingTypesMinCost[currentOption.value];
-      document.querySelector('#price').placeholder = '' + housingTypesMinCost[currentOption.value];
+      document.querySelector('#price').min = HousingTypesMinCost[currentOption.value];
+      document.querySelector('#price').placeholder = '' + HousingTypesMinCost[currentOption.value];
     }
   });
 };
@@ -211,7 +211,7 @@ var createCard = function (cardElement) {
   newCard.querySelector('.popup__title').textContent = cardElement.offer.title;
   newCard.querySelector('.popup__text--address').textContent = cardElement.offer.address;
   newCard.querySelector('.popup__text--price').textContent = cardElement.offer.price + '₽/ночь';
-  newCard.querySelector('.popup__type').textContent = housingTypes[cardElement.offer.type];
+  newCard.querySelector('.popup__type').textContent = HousingTypes[cardElement.offer.type];
   newCard.querySelector('.popup__text--capacity').textContent = cardElement.offer.rooms + ' комнаты для ' + cardElement.offer.guests + ' гостей';
   newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardElement.offer.checkin + ', выезд до ' + cardElement.offer.checkout;
   createListFeatures(newCard, cardElement.offer.features);
@@ -225,6 +225,7 @@ var createCard = function (cardElement) {
 
 // Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
 var renderCard = function (cardElement) {
+  closeCard(cardElement);
   if (!document.querySelector('.map__card')) {
     document.querySelector('.map').insertBefore(createCard(cardElement), document.querySelector('.map__filters-container'));
   }
