@@ -13,35 +13,6 @@ var ROOMS_FOR_GUESTS = {
   '3': ['1', '2', '3'],
   '100': ['0']
 };
-var rooms = document.querySelector('#room_number');
-var guests = document.querySelector('#capacity');
-
-// Функция установки соответствия количества комнат и количества гостей
-var validateGuests = function () {
-  var validGuestsOptions = ROOMS_FOR_GUESTS[rooms.value]; // Валидные опции из словаря
-  var guestsOptions = guests.querySelectorAll('option'); // Находим все опции по количеству мест (гостям)
-  guestsOptions.forEach(function (currentOption) { // Перебор всех доступных опций в коллекции
-    currentOption.disabled = true; // Блокируем все по-умолчанию
-    currentOption.selected = false; // Сбрасываем выбор selected
-    var index = validGuestsOptions.indexOf(currentOption.value); // Находим в списке валидных опций нашу опцию
-    if (index >= 0) {
-      currentOption.disabled = false; // Разблокировка опции, если она есть в словаре
-      if (index === 0) {
-        currentOption.selected = true; // Первый элемент выставляем в selected
-      }
-    }
-  });
-};
-
-// Функция выбора случайного числа
-var getRandomNumber = function (min, max) {
-  var randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
-  return randomNumber;
-};
-
-var pinTemplate = document.querySelector('#pin').content;
-
-var cardTemplate = document.querySelector('#card').content;
 
 // Строка с одним из четырёх фиксированных значений:
 var offerType = ['palace', 'flat', 'house', 'bungalo'];
@@ -61,9 +32,60 @@ var housingTypesMinCost = {
   'bungalo': '0'
 };
 
-// 3.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
-var roomType = document.querySelector('#type');
+// Строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
+var offerCheckin = ['12:00', '13:00', '14:00'];
 
+// Строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
+var offerCheckout = ['12:00', '13:00', '14:00'];
+
+// Массив строк случайной длины из ниже предложенных
+var offerFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+
+// Строка с описанием
+var offerDescription = 'Offer description';
+
+// Массив строк случайной длины, содержащий адреса фотографий
+var offerPhotosArr = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
+
+var rooms = document.querySelector('#room_number');
+var guests = document.querySelector('#capacity');
+var pinTemplate = document.querySelector('#pin').content;
+var cardTemplate = document.querySelector('#card').content;
+var roomType = document.querySelector('#type');
+var timeIn = document.querySelector('#timein');
+var timeOut = document.querySelector('#timeout');
+var mapPinMain = document.querySelector('.map__pin--main');
+var adHeader = document.querySelector('#title');
+var adPricePerNight = document.querySelector('#price');
+
+// Функция выбора случайного числа
+var getRandomNumber = function (min, max) {
+  var randomNumber = Math.floor(min + Math.random() * (max + 1 - min));
+  return randomNumber;
+};
+
+// Функция установки соответствия количества комнат и количества гостей
+var validateGuests = function () {
+  var validGuestsOptions = ROOMS_FOR_GUESTS[rooms.value]; // Валидные опции из словаря
+  var guestsOptions = guests.querySelectorAll('option'); // Находим все опции по количеству мест (гостям)
+  guestsOptions.forEach(function (currentOption) { // Перебор всех доступных опций в коллекции
+    currentOption.disabled = true; // Блокируем все по-умолчанию
+    currentOption.selected = false; // Сбрасываем выбор selected
+    var index = validGuestsOptions.indexOf(currentOption.value); // Находим в списке валидных опций нашу опцию
+    if (index >= 0) {
+      currentOption.disabled = false; // Разблокировка опции, если она есть в словаре
+      if (index === 0) {
+        currentOption.selected = true; // Первый элемент выставляем в selected
+      }
+    }
+  });
+};
+
+// 3.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
 var validateHousingTypes = function () {
   var selectedRoomTypes = roomType.querySelectorAll('option');
   selectedRoomTypes.forEach(function (currentOption) {
@@ -74,16 +96,7 @@ var validateHousingTypes = function () {
   });
 };
 
-// Строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
-var offerCheckin = ['12:00', '13:00', '14:00'];
-
-// Строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
-var offerCheckout = ['12:00', '13:00', '14:00'];
-
 // 3.5. Поля «Время заезда» и «Время выезда» синхронизированы: при изменении значения одного поля, во втором выделяется соответствующее ему. Например, если время заезда указано «после 14», то время выезда будет равно «до 14» и наоборот.
-var timeIn = document.querySelector('#timein');
-var timeOut = document.querySelector('#timeout');
-
 var validateCheckOut = function () {
   timeOut.value = timeIn.value;
 };
@@ -91,9 +104,6 @@ var validateCheckOut = function () {
 var validateCheckIn = function () {
   timeIn.value = timeOut.value;
 };
-
-// Массив строк случайной длины из ниже предложенных
-var offerFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
 // Функция создания доступных удобств в карточке
 var createListFeatures = function (node, featuresArr) {
@@ -115,18 +125,6 @@ var createRandomLengthArray = function (arr) {
   }
   return rndArray;
 };
-
-// Строка с описанием
-var offerDescription = 'Offer description';
-
-// Массив строк случайной длины, содержащий адреса фотографий
-var offerPhotosArr = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-];
-
-var mapPinMain = document.querySelector('.map__pin--main');
 
 // Функция создания и отрисовки доступных фотографий в карточке
 var createListPhotos = function (node, photosArr) {
@@ -186,7 +184,7 @@ var createObjectsArray = function (objQuantity) {
   return objectsArray;
 };
 
-// Создание пина
+// Функция создание пина
 var createPin = function (pinElement) {
   var pinTemplateObject = pinTemplate.querySelector('.map__pin');
   var newPin = pinTemplateObject.cloneNode(true);
@@ -208,11 +206,51 @@ var renderPins = function (array) {
   });
 };
 
+var createCard = function (cardElement) {
+  var newCard = cardTemplate.cloneNode(true);
+  newCard.querySelector('.popup__title').textContent = cardElement.offer.title;
+  newCard.querySelector('.popup__text--address').textContent = cardElement.offer.address;
+  newCard.querySelector('.popup__text--price').textContent = cardElement.offer.price + '₽/ночь';
+  newCard.querySelector('.popup__type').textContent = housingTypes[cardElement.offer.type];
+  newCard.querySelector('.popup__text--capacity').textContent = cardElement.offer.rooms + ' комнаты для ' + cardElement.offer.guests + ' гостей';
+  newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardElement.offer.checkin + ', выезд до ' + cardElement.offer.checkout;
+  createListFeatures(newCard, cardElement.offer.features);
+  newCard.querySelector('.popup__description').textContent = cardElement.offer.description;
+  createListPhotos(newCard, cardElement.offer.photos);
+  newCard.querySelector('.popup__avatar').src = cardElement.author.avatar;
+  newCard.querySelector('.popup__close').addEventListener('click', closeCard);
+  document.addEventListener('keydown', popupEscPressHandler);
+  return newCard;
+};
+
+// Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
+var renderCard = function (cardElement) {
+  if (!document.querySelector('.map__card')) {
+    document.querySelector('.map').insertBefore(createCard(cardElement), document.querySelector('.map__filters-container'));
+  }
+};
+
 // Функция закрытия(удаления) карточки
 var closeCard = function () {
   if (document.querySelector('.map__card')) {
     document.querySelector('.map__card').remove();
     document.removeEventListener('keydown', popupEscPressHandler);
+  }
+};
+
+// Функция перевода страницы в активное состояние п 1.2 ТЗ
+var setActiveState = function () {
+  if (document.querySelector('.map--faded')) {
+    document.querySelector('.map--faded').classList.remove('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    setFormDisableAttr('.ad-form', 'fieldset', false);
+    setFormDisableAttr('.map__filters', 'select', false);
+    setFormDisableAttr('.map__filters', 'fieldset', false);
+    document.querySelector('#address').readOnly = true;
+    validateGuests();
+    validateHousingTypes();
+    var someTestArr = createObjectsArray(8); // Создание моки из 8 объектов
+    renderPins(someTestArr);
   }
 };
 
@@ -230,49 +268,11 @@ var popupEscPressHandler = function (evt) {
   }
 };
 
-// Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
-var renderCard = function (cardElement) {
-  var newCard = cardTemplate.cloneNode(true);
-  newCard.querySelector('.popup__title').textContent = cardElement.offer.title;
-  newCard.querySelector('.popup__text--address').textContent = cardElement.offer.address;
-  newCard.querySelector('.popup__text--price').textContent = cardElement.offer.price + '₽/ночь';
-  newCard.querySelector('.popup__type').textContent = housingTypes[cardElement.offer.type];
-  newCard.querySelector('.popup__text--capacity').textContent = cardElement.offer.rooms + ' комнаты для ' + cardElement.offer.guests + ' гостей';
-  newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardElement.offer.checkin + ', выезд до ' + cardElement.offer.checkout;
-  createListFeatures(newCard, cardElement.offer.features);
-  newCard.querySelector('.popup__description').textContent = cardElement.offer.description;
-  createListPhotos(newCard, cardElement.offer.photos);
-  newCard.querySelector('.popup__avatar').src = cardElement.author.avatar;
-  newCard.querySelector('.popup__close').addEventListener('click', closeCard);
-  document.addEventListener('keydown', popupEscPressHandler);
-  if (!document.querySelector('.map__card')) {
-    document.querySelector('.map').insertBefore(newCard, document.querySelector('.map__filters-container'));
-  }
-};
-
-// Установка неактивного состояния п 1.1 ТЗ
-setFormDisableAttr('.ad-form', 'fieldset', true);
-setFormDisableAttr('.map__filters', 'select', true);
-setFormDisableAttr('.map__filters', 'fieldset', true);
-setPinAdress(LABEL_CENTER, LABEL_CENTER);
-
-// Функция перевода страницы в активное состояние п 1.2 ТЗ
-var setActiveState = function () {
-  if (document.querySelector('.map--faded')) {
-    document.querySelector('.map--faded').classList.remove('map--faded');
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-    setFormDisableAttr('.ad-form', 'fieldset', false);
-    setFormDisableAttr('.map__filters', 'select', false);
-    setFormDisableAttr('.map__filters', 'fieldset', false);
-    document.querySelector('#address').readOnly = true;
-    validateGuests();
-    validateHousingTypes();
-
-    var someTestArr = createObjectsArray(8); // Создание моки из 8 объектов
-    renderPins(someTestArr);
-  }
-
-};
+// Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
+rooms.addEventListener('change', validateGuests);
+roomType.addEventListener('change', validateHousingTypes);
+timeIn.addEventListener('change', validateCheckOut);
+timeOut.addEventListener('change', validateCheckIn);
 
 mapPinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
@@ -288,15 +288,7 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-
-// Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
-rooms.addEventListener('change', validateGuests);
-roomType.addEventListener('change', validateHousingTypes);
-timeIn.addEventListener('change', validateCheckOut);
-timeOut.addEventListener('change', validateCheckIn);
-
 // Перевод ошибок ввода на русский язык - событие invalid
-var adHeader = document.querySelector('#title');
 adHeader.addEventListener('invalid', function () {
   if (adHeader.validity.tooShort) {
     adHeader.setCustomValidity('Минимальная длина — 30 символов');
@@ -310,7 +302,6 @@ adHeader.addEventListener('invalid', function () {
   }
 });
 
-var adPricePerNight = document.querySelector('#price');
 adPricePerNight.addEventListener('invalid', function () {
   if (adPricePerNight.validity.rangeOverflow) {
     adPricePerNight.setCustomValidity('Максимальное значение — 1 000 000');
@@ -322,3 +313,9 @@ adPricePerNight.addEventListener('invalid', function () {
     adPricePerNight.setCustomValidity('');
   }
 });
+
+// Установка неактивного состояния п 1.1 ТЗ
+setFormDisableAttr('.ad-form', 'fieldset', true);
+setFormDisableAttr('.map__filters', 'select', true);
+setFormDisableAttr('.map__filters', 'fieldset', true);
+setPinAdress(LABEL_CENTER, LABEL_CENTER);
