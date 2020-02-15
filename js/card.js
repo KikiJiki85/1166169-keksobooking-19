@@ -39,13 +39,31 @@
     newCard.querySelector('.popup__description').textContent = cardElement.offer.description;
     createListPhotos(newCard, cardElement.offer.photos);
     newCard.querySelector('.popup__avatar').src = cardElement.author.avatar;
-    newCard.querySelector('.popup__close').addEventListener('click', window.map.closeCard);
+    newCard.querySelector('.popup__close').addEventListener('click', close);
     document.addEventListener('keydown', window.map.popupEscPressHandler);
     return newCard;
   };
 
+  // Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
+  var render = function (cardElement) {
+    close(cardElement);
+    if (!document.querySelector('.map__card')) {
+      document.querySelector('.map').insertBefore(create(cardElement), document.querySelector('.map__filters-container'));
+    }
+  };
+
+  // Функция закрытия(удаления) карточки
+  var close = function () {
+    if (document.querySelector('.map__card')) {
+      document.querySelector('.map__card').remove();
+      document.removeEventListener('keydown', window.map.popupEscPressHandler);
+    }
+  };
+
   window.card = {
-    create: create
+    create: create,
+    render: render,
+    close: close
   };
 
 })();

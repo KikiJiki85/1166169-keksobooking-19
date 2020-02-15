@@ -8,42 +8,20 @@
 
   var mapPinMain = document.querySelector('.map__pin--main');
 
-  // Функция отрисовки пина
-  var renderPins = function (array) {
-    array.forEach(function (currentElement) {
-      document.querySelector('.map__pins').appendChild(window.pin.create(currentElement));
-    });
-  };
-
-  // Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
-  var renderCard = function (cardElement) {
-    closeCard(cardElement);
-    if (!document.querySelector('.map__card')) {
-      document.querySelector('.map').insertBefore(window.card.create(cardElement), document.querySelector('.map__filters-container'));
-    }
-  };
-
   // Добавьте возможность закрытия карточки с подробной информацией по нажатию клавиши Esc и клике по иконке закрытия;
   var popupEscPressHandler = function (evt) {
     if (evt.key === ESC_KEY) {
-      closeCard();
+      window.card.close();
     }
   };
 
   // Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
   var pinEnterPressHandler = function (evt, element) {
     if (evt.key === ENTER_KEY) {
-      renderCard(element);
+      window.card.render(element);
     }
   };
 
-  // Функция закрытия(удаления) карточки
-  var closeCard = function () {
-    if (document.querySelector('.map__card')) {
-      document.querySelector('.map__card').remove();
-      document.removeEventListener('keydown', popupEscPressHandler);
-    }
-  };
 
   // Функция перевода страницы в активное состояние п 1.2 ТЗ
   var setActiveState = function () {
@@ -57,7 +35,7 @@
       window.form.validateGuests();
       window.form.validateHousingTypes();
       var someTestArr = window.data.createObjectsArray(8); // Создание моки из 8 объектов
-      renderPins(someTestArr);
+      window.pin.render(someTestArr);
     }
   };
 
@@ -82,9 +60,6 @@
   window.form.setPinAdress(LABEL_CENTER, LABEL_CENTER);
 
   window.map = {
-    renderPins: renderPins,
-    renderCard: renderCard,
-    closeCard: closeCard,
     popupEscPressHandler: popupEscPressHandler,
     pinEnterPressHandler: pinEnterPressHandler,
     setActiveState: setActiveState
