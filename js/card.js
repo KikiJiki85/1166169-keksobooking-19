@@ -39,7 +39,9 @@
     newCard.querySelector('.popup__description').textContent = cardElement.offer.description;
     createListPhotos(newCard, cardElement.offer.photos);
     newCard.querySelector('.popup__avatar').src = cardElement.author.avatar;
-    newCard.querySelector('.popup__close').addEventListener('click', close);
+    newCard.querySelector('.popup__close').addEventListener('click', function () {
+      close();
+    });
     document.addEventListener('keydown', window.map.popupEscPressHandler);
     return newCard;
   };
