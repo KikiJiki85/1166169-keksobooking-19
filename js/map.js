@@ -39,6 +39,7 @@
     }
   };
 
+  // Активация страницы
   mapPinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
       setActiveState();
@@ -62,7 +63,9 @@
   window.map = {
     popupEscPressHandler: popupEscPressHandler,
     pinEnterPressHandler: pinEnterPressHandler,
-    setActiveState: setActiveState
+    setActiveState: setActiveState,
+    PIN_POINTER_X: PIN_POINTER_X,
+    PIN_POINTER_Y: PIN_POINTER_Y
   };
 
 })();
