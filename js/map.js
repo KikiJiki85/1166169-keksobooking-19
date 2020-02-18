@@ -54,11 +54,8 @@
         y: evt.clientY
       };
 
-      var dragged = false;
-
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
-        dragged = true;
         window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
 
         var shift = {
@@ -83,14 +80,6 @@
 
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
-
-        if (dragged) {
-          var onClickPreventDefault = function (clickEvt) {
-            clickEvt.preventDefault();
-            mapPinMain.removeEventListener('click', onClickPreventDefault);
-          };
-          mapPinMain.addEventListener('click', onClickPreventDefault);
-        }
       };
 
       document.addEventListener('mousemove', onMouseMove);
