@@ -39,20 +39,29 @@
     }
   };
 
-  // Активация страницы
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0) {
+  var pageActivation = function (condition) {
+    if (condition) {
       setActiveState();
       window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
     }
-  });
+  };
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === ENTER_KEY) {
-      setActiveState();
-      window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
-    }
-  });
+  var pinClickPageActivationHandler = function (evt) {
+    pageActivation(evt.button === 0);
+    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+  };
+
+  var pinPressEnterPageActivationHandler = function (evt) {
+    pageActivation(evt.key === ENTER_KEY);
+    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+  };
+
+  // Активация страницы
+  mapPinMain.addEventListener('mousedown', pinClickPageActivationHandler);
+  mapPinMain.addEventListener('keydown', pinPressEnterPageActivationHandler);
+
 
   // Установка неактивного состояния п 1.1 ТЗ
   window.form.setFormDisableAttr('.ad-form', 'fieldset', true);
