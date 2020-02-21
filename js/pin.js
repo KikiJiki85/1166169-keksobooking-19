@@ -20,7 +20,9 @@
   // Функция отрисовки пина
   var render = function (array) {
     array.forEach(function (currentElement) {
-      document.querySelector('.map__pins').appendChild(create(currentElement));
+      if (currentElement.offer) {
+        document.querySelector('.map__pins').appendChild(create(currentElement));
+      }
     });
   };
 
