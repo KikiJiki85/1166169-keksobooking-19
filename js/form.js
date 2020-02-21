@@ -8,6 +8,13 @@
     '100': ['0']
   };
 
+  var HousingTypesMinCost = {
+    'palace': '10000',
+    'flat': '1000',
+    'house': '5000',
+    'bungalo': '0'
+  };
+
   var adHeader = document.querySelector('#title');
   var adPricePerNight = document.querySelector('#price');
   var rooms = document.querySelector('#room_number');
@@ -39,8 +46,8 @@
     var selectedRoomTypes = roomType.querySelectorAll('option');
     selectedRoomTypes.forEach(function (currentOption) {
       if (roomType.value === currentOption.value) {
-        document.querySelector('#price').min = window.data.HousingTypesMinCost[currentOption.value];
-        document.querySelector('#price').placeholder = '' + window.data.HousingTypesMinCost[currentOption.value];
+        document.querySelector('#price').min = HousingTypesMinCost[currentOption.value];
+        document.querySelector('#price').placeholder = '' + HousingTypesMinCost[currentOption.value];
       }
     });
   };

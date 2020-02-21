@@ -1,20 +1,6 @@
 'use strict';
 (function () {
 
-  var HousingTypes = {
-    'palace': 'Дворец',
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
-  };
-
-  var HousingTypesMinCost = {
-    'palace': '10000',
-    'flat': '1000',
-    'house': '5000',
-    'bungalo': '0'
-  };
-
   // Строка с одним из четырёх фиксированных значений:
   var offerType = ['palace', 'flat', 'house', 'bungalo'];
 
@@ -86,7 +72,5 @@
 
   window.data = {
     createObjectsArray: createObjectsArray,
-    HousingTypes: HousingTypes,
-    HousingTypesMinCost: HousingTypesMinCost,
   };
 })();

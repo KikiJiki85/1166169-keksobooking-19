@@ -1,5 +1,12 @@
 'use strict';
 (function () {
+  var HousingTypes = {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
+
   var cardTemplate = document.querySelector('#card').content;
 
   // Функция создания доступных удобств в карточке
@@ -32,7 +39,7 @@
     newCard.querySelector('.popup__title').textContent = cardElement.offer.title;
     newCard.querySelector('.popup__text--address').textContent = cardElement.offer.address;
     newCard.querySelector('.popup__text--price').textContent = cardElement.offer.price + '₽/ночь';
-    newCard.querySelector('.popup__type').textContent = window.data.HousingTypes[cardElement.offer.type];
+    newCard.querySelector('.popup__type').textContent = HousingTypes[cardElement.offer.type];
     newCard.querySelector('.popup__text--capacity').textContent = cardElement.offer.rooms + ' комнаты для ' + cardElement.offer.guests + ' гостей';
     newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardElement.offer.checkin + ', выезд до ' + cardElement.offer.checkout;
     createListFeatures(newCard, cardElement.offer.features);

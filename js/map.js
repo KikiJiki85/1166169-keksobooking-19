@@ -22,6 +22,34 @@
     }
   };
 
+  var pinClickPageActivationHandler = function (evt) {
+    pageActivation(evt.button === 0);
+    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+  };
+
+  var pinPressEnterPageActivationHandler = function (evt) {
+    pageActivation(evt.key === ENTER_KEY);
+    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+  };
+
+  var successDataReceiveHandler = function (data) {
+    window.pin.render(data);
+  };
+
+  var errorDataReceiveHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: crimson; padding-top: 5px; padding-bottom: 5px';
+    node.style.position = 'absolute';
+    node.style.color = '#ffffff';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.top = '20px';
+    node.style.fontSize = '26px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 
   // Функция перевода страницы в активное состояние п 1.2 ТЗ
   var setActiveState = function () {
@@ -34,25 +62,21 @@
       document.querySelector('#address').readOnly = true;
       window.form.validateGuests();
       window.form.validateHousingTypes();
-      var someTestArr = window.data.createObjectsArray(8); // Создание моки из 8 объектов
-      window.pin.render(someTestArr);
+      window.backend.load(successDataReceiveHandler, errorDataReceiveHandler);
+    }
+  };
+
+  var pageActivation = function (condition) {
+    if (condition) {
+      setActiveState();
+      window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
     }
   };
 
   // Активация страницы
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0) {
-      setActiveState();
-      window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
-    }
-  });
+  mapPinMain.addEventListener('mousedown', pinClickPageActivationHandler);
+  mapPinMain.addEventListener('keydown', pinPressEnterPageActivationHandler);
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === ENTER_KEY) {
-      setActiveState();
-      window.form.setPinAdress(PIN_POINTER_X, PIN_POINTER_Y);
-    }
-  });
 
   // Установка неактивного состояния п 1.1 ТЗ
   window.form.setFormDisableAttr('.ad-form', 'fieldset', true);
