@@ -8,6 +8,9 @@
     '100': ['0']
   };
 
+  var MAP_PIN_X_START = '570px';
+  var MAP_PIN_Y_START = '375px';
+
   var HousingTypesMinCost = {
     'palace': '10000',
     'flat': '1000',
@@ -23,6 +26,8 @@
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var adForm = document.querySelector('.ad-form');
+  var resetForm = adForm.querySelector('.ad-form__reset');
 
   // Функция установки соответствия количества комнат и количества гостей
   var validateGuests = function () {
@@ -44,10 +49,10 @@
   // 3.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
   var validateHousingTypes = function () {
     var selectedRoomTypes = roomType.querySelectorAll('option');
-    selectedRoomTypes.forEach(function (currentOption) {
-      if (roomType.value === currentOption.value) {
-        document.querySelector('#price').min = HousingTypesMinCost[currentOption.value];
-        document.querySelector('#price').placeholder = '' + HousingTypesMinCost[currentOption.value];
+    selectedRoomTypes.forEach(function (currentHousingOption) {
+      if (roomType.value === currentHousingOption.value) {
+        document.querySelector('#price').min = HousingTypesMinCost[currentHousingOption.value];
+        document.querySelector('#price').placeholder = '' + HousingTypesMinCost[currentHousingOption.value];
       }
     });
   };
@@ -84,6 +89,84 @@
       adPricePerNight.setCustomValidity('Обязательное поле');
     } else {
       adPricePerNight.setCustomValidity('');
+    }
+  });
+
+  // Обработчик показа и закрытия окна об успешной отправке формы
+  var successDataSendHandler = function () {
+    var successMsgDiv = document.querySelector('#success').content.querySelector('.success');
+    var newMsg = successMsgDiv.cloneNode(true);
+    document.querySelector('main').appendChild(newMsg);
+
+    var successDivClickHandler = function () {
+      newMsg.remove();
+      window.removeEventListener('click', successDivClickHandler);
+    };
+
+    var successDivEscPressHandler = function (evtSucessKeydown) {
+      if (evtSucessKeydown.key === window.map.ESC_KEY) {
+        newMsg.remove();
+        window.removeEventListener('keydown', successDivEscPressHandler);
+      }
+    };
+    window.addEventListener('click', successDivClickHandler);
+    window.addEventListener('keydown', successDivEscPressHandler);
+
+    // После успешной передачи данных на сервер верните страницу в неактивное состояние и сбросьте форму.
+    window.pin.remove();
+    adForm.reset();
+    validateGuests();
+    validateHousingTypes();
+    window.map.setPassiveState();
+    mapPinMain.style.top = MAP_PIN_Y_START;
+    mapPinMain.style.left = MAP_PIN_X_START;
+    mapPinMain.addEventListener('mousedown', window.map.pinClickPageActivationHandler);
+    mapPinMain.addEventListener('keydown', window.map.pinPressEnterPageActivationHandler);
+  };
+
+  // Обработчик показа и закрытия окна о неудачной отправке формы
+  var errorDataSendHandler = function () {
+    var errorMsgDiv = document.querySelector('#error').content.querySelector('.error');
+    var newErrorMsg = errorMsgDiv.cloneNode(true);
+    document.querySelector('main').appendChild(newErrorMsg);
+
+    var errorDivEscPressHandler = function (evtErrorKeydown) {
+      if (evtErrorKeydown.key === window.map.ESC_KEY) {
+        newErrorMsg.remove();
+        window.removeEventListener('keydown', errorDivEscPressHandler);
+      }
+    };
+
+    var errorDivClickHandler = function () {
+      newErrorMsg.remove();
+      window.removeEventListener('click', errorDivClickHandler);
+    };
+
+    window.addEventListener('keydown', errorDivEscPressHandler);
+    document.querySelector('.error__button').addEventListener('click', errorDivClickHandler);
+    window.addEventListener('click', errorDivClickHandler);
+  };
+
+  // Обработчик отправки формы и возврата первоначального состояния
+  adForm.addEventListener('submit', function (evtSend) {
+    window.backend.sendRequest(successDataSendHandler, errorDataSendHandler, 'POST', window.backend.SAVE_URL, new FormData(adForm));
+    evtSend.preventDefault();
+  });
+
+  var resetFormHandler = function (evtFormReset) {
+    evtFormReset.preventDefault();
+    adForm.reset();
+    validateGuests();
+    validateHousingTypes();
+    window.form.setPinAdress(window.map.PIN_POINTER_X, window.map.PIN_POINTER_Y);
+  };
+
+  // Сброс формы по клику на кнопку очистить
+  resetForm.addEventListener('click', resetFormHandler);
+  // Сброс формы по нажатию на ENTER при фокусе на кнопке
+  resetForm.addEventListener('keydown', function (evtFormPressReset) {
+    if (evtFormPressReset.key === window.map.ENTER_KEY) {
+      resetFormHandler();
     }
   });
 

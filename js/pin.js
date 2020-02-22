@@ -19,15 +19,26 @@
 
   // Функция отрисовки пина
   var render = function (array) {
-    array.forEach(function (currentElement) {
-      if (currentElement.offer) {
-        document.querySelector('.map__pins').appendChild(create(currentElement));
+    array.forEach(function (currentRenderElement) {
+      if (currentRenderElement.offer) {
+        document.querySelector('.map__pins').appendChild(create(currentRenderElement));
+      }
+    });
+  };
+
+  var remove = function () {
+    var allRenderedPins = document.querySelectorAll('.map__pin');
+    var mainPin = document.querySelector('.map__pin--main');
+    allRenderedPins.forEach(function (currentRemovingElement) {
+      if (currentRemovingElement !== mainPin) {
+        currentRemovingElement.remove();
       }
     });
   };
 
   window.pin = {
     create: create,
-    render: render
+    render: render,
+    remove: remove
   };
 })();
