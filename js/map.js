@@ -62,8 +62,20 @@
       document.querySelector('#address').readOnly = true;
       window.form.validateGuests();
       window.form.validateHousingTypes();
-      window.backend.load(successDataReceiveHandler, errorDataReceiveHandler);
+      window.backend.sendRequest(successDataReceiveHandler, errorDataReceiveHandler, 'GET', window.backend.LOAD_URL);
     }
+  };
+
+  // Функция перевода страницы в активное состояние п 1.2 ТЗ
+  var setPassiveState = function () {
+    if (!document.querySelector('.map--faded')) {
+      document.querySelector('.map').classList.add('map--faded');
+      document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    }
+    window.form.setFormDisableAttr('.ad-form', 'fieldset', true);
+    window.form.setFormDisableAttr('.map__filters', 'select', true);
+    window.form.setFormDisableAttr('.map__filters', 'fieldset', true);
+    window.form.setPinAdress(LABEL_CENTER, LABEL_CENTER);
   };
 
   var pageActivation = function (condition) {
@@ -79,17 +91,19 @@
 
 
   // Установка неактивного состояния п 1.1 ТЗ
-  window.form.setFormDisableAttr('.ad-form', 'fieldset', true);
-  window.form.setFormDisableAttr('.map__filters', 'select', true);
-  window.form.setFormDisableAttr('.map__filters', 'fieldset', true);
-  window.form.setPinAdress(LABEL_CENTER, LABEL_CENTER);
+  setPassiveState();
 
   window.map = {
     popupEscPressHandler: popupEscPressHandler,
     pinEnterPressHandler: pinEnterPressHandler,
+    pinClickPageActivationHandler: pinClickPageActivationHandler,
+    pinPressEnterPageActivationHandler: pinPressEnterPageActivationHandler,
     setActiveState: setActiveState,
+    setPassiveState: setPassiveState,
     PIN_POINTER_X: PIN_POINTER_X,
-    PIN_POINTER_Y: PIN_POINTER_Y
+    PIN_POINTER_Y: PIN_POINTER_Y,
+    ESC_KEY: ESC_KEY,
+    ENTER_KEY: ENTER_KEY
   };
 
 })();
