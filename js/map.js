@@ -5,6 +5,7 @@
   var LABEL_CENTER = 33;
   var PIN_POINTER_X = 33;
   var PIN_POINTER_Y = 84;
+  var backup = [];
 
   var mapPinMain = document.querySelector('.map__pin--main');
 
@@ -35,7 +36,8 @@
   };
 
   var successDataReceiveHandler = function (data) {
-    window.pin.render(data);
+    window.map.backup = data;
+    window.pin.render(data.slice(0, window.filters.MAX_ADVERTISEMENTS));
   };
 
   var errorDataReceiveHandler = function (errorMessage) {
@@ -103,7 +105,8 @@
     PIN_POINTER_X: PIN_POINTER_X,
     PIN_POINTER_Y: PIN_POINTER_Y,
     ESC_KEY: ESC_KEY,
-    ENTER_KEY: ENTER_KEY
+    ENTER_KEY: ENTER_KEY,
+    backup: backup
   };
 
 })();
