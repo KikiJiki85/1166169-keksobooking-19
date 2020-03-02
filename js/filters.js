@@ -72,6 +72,18 @@
     return result;
   };
 
+  var setFilterToDefault = function () {
+    housingType.value = 'any';
+    housingPrice.value = 'any';
+    housingRooms.value = 'any';
+    housingGuests.value = 'any';
+    housingFeatures.forEach(function (feature) {
+      if (feature.checked) {
+        feature.checked = false;
+      }
+    });
+  };
+
   filtersForm.addEventListener('change', function () {
     window.debounce(function () {
       window.pin.remove();
@@ -82,6 +94,7 @@
 
   window.filters = {
     mapFiltersApply: mapFiltersApply,
-    MAX_ADVERTISEMENTS: MAX_ADVERTISEMENTS
+    MAX_ADVERTISEMENTS: MAX_ADVERTISEMENTS,
+    setFilterToDefault: setFilterToDefault
   };
 })();

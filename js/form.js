@@ -118,6 +118,8 @@
 
     // После успешной передачи данных на сервер верните страницу в неактивное состояние и сбросьте форму.
     window.pin.remove();
+    window.card.close();
+    window.filters.setFilterToDefault();
     adForm.reset();
     validateGuests();
     validateHousingTypes();
