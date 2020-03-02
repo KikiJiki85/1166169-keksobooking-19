@@ -11,7 +11,7 @@
   var MAP_PIN_X_START = '570px';
   var MAP_PIN_Y_START = '375px';
 
-  var HousingTypesMinCost = {
+  var housingTypeMinCostMap = {
     'palace': '10000',
     'flat': '1000',
     'house': '5000',
@@ -51,8 +51,8 @@
     var selectedRoomTypes = roomType.querySelectorAll('option');
     selectedRoomTypes.forEach(function (currentHousingOption) {
       if (roomType.value === currentHousingOption.value) {
-        document.querySelector('#price').min = HousingTypesMinCost[currentHousingOption.value];
-        document.querySelector('#price').placeholder = '' + HousingTypesMinCost[currentHousingOption.value];
+        document.querySelector('#price').min = housingTypeMinCostMap[currentHousingOption.value];
+        document.querySelector('#price').placeholder = '' + housingTypeMinCostMap[currentHousingOption.value];
       }
     });
   };
@@ -98,22 +98,28 @@
     var newMsg = successMsgDiv.cloneNode(true);
     document.querySelector('main').appendChild(newMsg);
 
-    var successDivClickHandler = function () {
+    var removeSuccessNode = function () {
       newMsg.remove();
-      window.removeEventListener('click', successDivClickHandler);
+      document.removeEventListener('click', successDivClickHandler);
+      document.removeEventListener('keydown', successDivEscPressHandler);
+    };
+
+    var successDivClickHandler = function () {
+      removeSuccessNode();
     };
 
     var successDivEscPressHandler = function (evtSucessKeydown) {
-      if (evtSucessKeydown.key === window.map.ESC_KEY) {
-        newMsg.remove();
-        window.removeEventListener('keydown', successDivEscPressHandler);
+      if (evtSucessKeydown.key === document.map.ESC_KEY) {
+        removeSuccessNode();
       }
     };
-    window.addEventListener('click', successDivClickHandler);
-    window.addEventListener('keydown', successDivEscPressHandler);
+    document.addEventListener('click', successDivClickHandler);
+    document.addEventListener('keydown', successDivEscPressHandler);
 
     // После успешной передачи данных на сервер верните страницу в неактивное состояние и сбросьте форму.
     window.pin.remove();
+    window.card.close();
+    window.filters.setFilterToDefault();
     adForm.reset();
     validateGuests();
     validateHousingTypes();
@@ -130,21 +136,30 @@
     var newErrorMsg = errorMsgDiv.cloneNode(true);
     document.querySelector('main').appendChild(newErrorMsg);
 
+    var removeErrorNode = function () {
+      newErrorMsg.remove();
+      document.removeEventListener('keydown', errorDivEscPressHandler);
+      document.removeEventListener('click', errorDivClickHandler);
+      document.removeEventListener('click', errorDivButtonClickHandler);
+    };
+
     var errorDivEscPressHandler = function (evtErrorKeydown) {
       if (evtErrorKeydown.key === window.map.ESC_KEY) {
-        newErrorMsg.remove();
-        window.removeEventListener('keydown', errorDivEscPressHandler);
+        removeErrorNode();
       }
     };
 
     var errorDivClickHandler = function () {
-      newErrorMsg.remove();
-      window.removeEventListener('click', errorDivClickHandler);
+      removeErrorNode();
     };
 
-    window.addEventListener('keydown', errorDivEscPressHandler);
-    document.querySelector('.error__button').addEventListener('click', errorDivClickHandler);
-    window.addEventListener('click', errorDivClickHandler);
+    var errorDivButtonClickHandler = function () {
+      removeErrorNode();
+    };
+
+    document.addEventListener('keydown', errorDivEscPressHandler);
+    document.querySelector('.error__button').addEventListener('click', errorDivButtonClickHandler);
+    document.addEventListener('click', errorDivClickHandler);
   };
 
   // Обработчик отправки формы и возврата первоначального состояния
