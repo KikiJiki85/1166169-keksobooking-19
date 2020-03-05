@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  var PHOTO_TEXT = 'Фотография жилья';
+  var PHOTO_HEIGHT = 40;
+  var PHOTO_WIDTH = 45;
+
   var housingTypeMap = {
     'palace': 'Дворец',
     'flat': 'Квартира',
@@ -27,9 +31,9 @@
       var offerPhoto = document.createElement('img');
       offerPhoto.classList.add('popup__photo');
       offerPhoto.src = photosArr[i];
-      offerPhoto.width = 45;
-      offerPhoto.height = 40;
-      offerPhoto.alt = 'Фотография жилья';
+      offerPhoto.width = PHOTO_WIDTH;
+      offerPhoto.height = PHOTO_HEIGHT;
+      offerPhoto.alt = PHOTO_TEXT;
       node.querySelector('.popup__photos').appendChild(offerPhoto);
     }
   };
