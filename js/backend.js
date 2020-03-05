@@ -3,6 +3,7 @@
   var TIMEOUT_IN_MS = 10000;
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var SAVE_URL = 'https://js.dump.academy/keksobooking';
+  var RESPONSE_TYPE = 'json';
 
   var StatusCode = {
     OK: 200
@@ -10,7 +11,7 @@
 
   var sendRequest = function (onLoad, onError, sendMethod, URL, dataSend) {
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
+    xhr.responseType = RESPONSE_TYPE;
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
         onLoad(xhr.response);

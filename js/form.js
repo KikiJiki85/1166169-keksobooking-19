@@ -28,6 +28,10 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var resetForm = adForm.querySelector('.ad-form__reset');
+  var avatarPreview = document.querySelector('.ad-form-header__preview img');
+  var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
+  var housePhotoPreview = document.querySelector('.ad-form__photo');
+  var housePhotoChooser = document.querySelector('.ad-form__upload input[type=file]');
 
   // Функция установки соответствия количества комнат и количества гостей
   var validateGuests = function () {
@@ -120,7 +124,7 @@
     window.pin.remove();
     window.card.close();
     window.filters.setFilterToDefault();
-    adForm.reset();
+    resetAdForm();
     validateGuests();
     validateHousingTypes();
     window.map.setPassiveState();
@@ -128,6 +132,12 @@
     mapPinMain.style.left = MAP_PIN_X_START;
     mapPinMain.addEventListener('mousedown', window.map.pinClickPageActivationHandler);
     mapPinMain.addEventListener('keydown', window.map.pinPressEnterPageActivationHandler);
+  };
+
+  var resetAdForm = function () {
+    adForm.reset();
+    avatarPreview.src = 'img/muffin-grey.svg';
+    housePhotoPreview.style.backgroundImage = '';
   };
 
   // Обработчик показа и закрытия окна о неудачной отправке формы
@@ -170,7 +180,7 @@
 
   var resetFormHandler = function (evtFormReset) {
     evtFormReset.preventDefault();
-    adForm.reset();
+    resetAdForm();
     validateGuests();
     validateHousingTypes();
     window.form.setPinAdress(window.map.PIN_POINTER_X, window.map.PIN_POINTER_Y);
@@ -197,6 +207,20 @@
   var setPinAdress = function (xOffset, yOffset) {
     document.querySelector('#address').value = Math.round(parseInt(mapPinMain.style.left, 10) + xOffset) + ', ' + Math.round(parseInt(mapPinMain.style.top, 10) + yOffset);
   };
+
+  // Обработчик загрузки аватарки
+  var uploadAvatarHandler = function () {
+    window.images.uploadPhoto(avatarChooser, avatarPreview);
+  };
+
+  // Обработчик загрузки картинки жилья
+  var uploadHousePhotoHandler = function () {
+    window.images.uploadPhoto(housePhotoChooser, housePhotoPreview);
+  };
+
+
+  avatarChooser.addEventListener('change', uploadAvatarHandler);
+  housePhotoChooser.addEventListener('change', uploadHousePhotoHandler);
 
   // Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
   rooms.addEventListener('change', validateGuests);

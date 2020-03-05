@@ -1,13 +1,15 @@
 'use strict';
 (function () {
+  var PIN_CENTER_WIDTH = 25;
+  var PIN_CENTER_HEIGHT = 70;
   var pinTemplate = document.querySelector('#pin').content;
 
   // Функция создание пина
   var create = function (pinElement) {
     var pinTemplateObject = pinTemplate.querySelector('.map__pin');
     var newPin = pinTemplateObject.cloneNode(true);
-    newPin.style.left = (pinElement.location.x - 25) + 'px';
-    newPin.style.top = (pinElement.location.y - 70) + 'px';
+    newPin.style.left = (pinElement.location.x - PIN_CENTER_WIDTH) + 'px';
+    newPin.style.top = (pinElement.location.y - PIN_CENTER_HEIGHT) + 'px';
     newPin.querySelector('img').src = pinElement.author.avatar;
     newPin.querySelector('img').alt = pinElement.offer.title;
     newPin.addEventListener('click', function () {
