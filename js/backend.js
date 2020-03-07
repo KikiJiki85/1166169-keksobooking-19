@@ -5,15 +5,15 @@
   var SAVE_URL = 'https://js.dump.academy/keksobooking';
   var RESPONSE_TYPE = 'json';
 
-  var StatusCode = {
+  var statusCodeMap = {
     OK: 200
   };
 
-  var sendRequest = function (onLoad, onError, sendMethod, URL, dataSend) {
+  var sendRequest = function (onLoad, onError, sendMethod, url, dataSend) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = RESPONSE_TYPE;
     xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
+      if (xhr.status === statusCodeMap.OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -27,13 +27,13 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS; // 10s
-    xhr.open(sendMethod, URL);
+    xhr.open(sendMethod, url);
     xhr.send(dataSend);
   };
 
   window.backend = {
-    sendRequest: sendRequest,
     LOAD_URL: LOAD_URL,
-    SAVE_URL: SAVE_URL
+    SAVE_URL: SAVE_URL,
+    sendRequest: sendRequest
   };
 })();

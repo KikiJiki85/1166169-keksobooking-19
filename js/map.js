@@ -2,6 +2,7 @@
 (function () {
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
+  var LEFT_MOUSE_BUTTON = 0;
   var LABEL_CENTER = 33;
   var PIN_POINTER_X = 33;
   var PIN_POINTER_Y = 84;
@@ -24,7 +25,7 @@
   };
 
   var pinClickPageActivationHandler = function (evt) {
-    pageActivation(evt.button === 0);
+    pageActivation(evt.button === LEFT_MOUSE_BUTTON);
     mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
     mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
   };
@@ -96,17 +97,18 @@
   setPassiveState();
 
   window.map = {
-    popupEscPressHandler: popupEscPressHandler,
-    pinEnterPressHandler: pinEnterPressHandler,
-    pinClickPageActivationHandler: pinClickPageActivationHandler,
-    pinPressEnterPageActivationHandler: pinPressEnterPageActivationHandler,
-    setActiveState: setActiveState,
-    setPassiveState: setPassiveState,
     PIN_POINTER_X: PIN_POINTER_X,
     PIN_POINTER_Y: PIN_POINTER_Y,
     ESC_KEY: ESC_KEY,
     ENTER_KEY: ENTER_KEY,
-    backup: backup
+    LEFT_MOUSE_BUTTON: LEFT_MOUSE_BUTTON,
+    setActiveState: setActiveState,
+    setPassiveState: setPassiveState,
+    backup: backup,
+    popupEscPressHandler: popupEscPressHandler,
+    pinEnterPressHandler: pinEnterPressHandler,
+    pinClickPageActivationHandler: pinClickPageActivationHandler,
+    pinPressEnterPageActivationHandler: pinPressEnterPageActivationHandler
   };
 
 })();

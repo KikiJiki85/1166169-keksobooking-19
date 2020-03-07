@@ -7,7 +7,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
 
   mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0) {
+    if (evt.button === window.map.LEFT_MOUSE_BUTTON) {
       evt.preventDefault();
 
       var startCoords = {

@@ -198,9 +198,9 @@
   // Функция скрытия-показа элементов управления формы (input, select и т. д. должны быть неактивны в исходном состоянии)
   var setFormDisableAttr = function (form, field, attrStatus) {
     var inputArray = document.querySelector(form).querySelectorAll(field);
-    for (var i = 0; i < inputArray.length; i++) {
-      inputArray[i].disabled = attrStatus;
-    }
+    inputArray.forEach(function (currentElement) {
+      currentElement.disabled = attrStatus;
+    });
   };
 
   // Функция установки поля ввода адреса
@@ -223,10 +223,18 @@
   housePhotoChooser.addEventListener('change', uploadHousePhotoHandler);
 
   // Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
-  rooms.addEventListener('change', validateGuests);
-  roomType.addEventListener('change', validateHousingTypes);
-  timeIn.addEventListener('change', validateCheckOut);
-  timeOut.addEventListener('change', validateCheckIn);
+  rooms.addEventListener('change', function () {
+    validateGuests();
+  });
+  roomType.addEventListener('change', function () {
+    validateHousingTypes();
+  });
+  timeIn.addEventListener('change', function () {
+    validateCheckOut();
+  });
+  timeOut.addEventListener('change', function () {
+    validateCheckIn();
+  });
 
   window.form = {
     validateGuests: validateGuests,
