@@ -1,21 +1,23 @@
 'use strict';
 (function () {
-  // Словарь соответствия изменения количества комнат и количества гостей
-  var ROOMS_FOR_GUESTS = {
-    '1': ['1'],
-    '2': ['1', '2'],
-    '3': ['1', '2', '3'],
-    '100': ['0']
-  };
 
   var MAP_PIN_X_START = '570px';
   var MAP_PIN_Y_START = '375px';
+  var RADIX_VALUE = 10;
+  var AVATAR_SRC = 'img/muffin-grey.svg';
 
   var housingTypeMinCostMap = {
     'palace': '10000',
     'flat': '1000',
     'house': '5000',
     'bungalo': '0'
+  };
+
+  var roomsForGuestsMap = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
   };
 
   var adHeader = document.querySelector('#title');
@@ -28,14 +30,15 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var resetForm = adForm.querySelector('.ad-form__reset');
-  var avatarPreview = document.querySelector('.ad-form-header__preview img');
-  var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
-  var housePhotoPreview = document.querySelector('.ad-form__photo');
-  var housePhotoChooser = document.querySelector('.ad-form__upload input[type=file]');
+  var avatarPreview = adForm.querySelector('.ad-form-header__preview img');
+  var avatarChooser = adForm.querySelector('.ad-form__field input[type=file]');
+  var housePhotoPreview = adForm.querySelector('.ad-form__photo');
+  var housePhotoChooser = adForm.querySelector('.ad-form__upload input[type=file]');
+  var mainMsg = document.querySelector('main');
 
   // Функция установки соответствия количества комнат и количества гостей
   var validateGuests = function () {
-    var validGuestsOptions = ROOMS_FOR_GUESTS[rooms.value]; // Валидные опции из словаря
+    var validGuestsOptions = roomsForGuestsMap[rooms.value]; // Валидные опции из словаря
     var guestsOptions = guests.querySelectorAll('option'); // Находим все опции по количеству мест (гостям)
     guestsOptions.forEach(function (currentOption) { // Перебор всех доступных опций в коллекции
       currentOption.disabled = true; // Блокируем все по-умолчанию
@@ -100,7 +103,7 @@
   var successDataSendHandler = function () {
     var successMsgDiv = document.querySelector('#success').content.querySelector('.success');
     var newMsg = successMsgDiv.cloneNode(true);
-    document.querySelector('main').appendChild(newMsg);
+    mainMsg.appendChild(newMsg);
 
     var removeSuccessNode = function () {
       newMsg.remove();
@@ -113,7 +116,7 @@
     };
 
     var successDivEscPressHandler = function (evtSucessKeydown) {
-      if (evtSucessKeydown.key === document.map.ESC_KEY) {
+      if (evtSucessKeydown.key === window.map.ESC_KEY) {
         removeSuccessNode();
       }
     };
@@ -136,7 +139,7 @@
 
   var resetAdForm = function () {
     adForm.reset();
-    avatarPreview.src = 'img/muffin-grey.svg';
+    avatarPreview.src = AVATAR_SRC;
     housePhotoPreview.style.backgroundImage = '';
   };
 
@@ -144,7 +147,7 @@
   var errorDataSendHandler = function () {
     var errorMsgDiv = document.querySelector('#error').content.querySelector('.error');
     var newErrorMsg = errorMsgDiv.cloneNode(true);
-    document.querySelector('main').appendChild(newErrorMsg);
+    mainMsg.appendChild(newErrorMsg);
 
     var removeErrorNode = function () {
       newErrorMsg.remove();
@@ -205,7 +208,7 @@
 
   // Функция установки поля ввода адреса
   var setPinAdress = function (xOffset, yOffset) {
-    document.querySelector('#address').value = Math.round(parseInt(mapPinMain.style.left, 10) + xOffset) + ', ' + Math.round(parseInt(mapPinMain.style.top, 10) + yOffset);
+    document.querySelector('#address').value = Math.round(parseInt(mapPinMain.style.left, RADIX_VALUE) + xOffset) + ', ' + Math.round(parseInt(mapPinMain.style.top, RADIX_VALUE) + yOffset);
   };
 
   // Обработчик загрузки аватарки

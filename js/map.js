@@ -6,32 +6,42 @@
   var LABEL_CENTER = 33;
   var PIN_POINTER_X = 33;
   var PIN_POINTER_Y = 84;
-  var backup = [];
 
+  var ErrorNode = {
+    STYLES: 'z-index: 100; margin: 0 auto; text-align: center; background-color: crimson; padding-top: 5px; padding-bottom: 5px',
+    POSITION_STATE: 'absolute',
+    LEFT_POSITION: 0,
+    RIGHT_POSITION: 0,
+    TOP_POSITION: '20px',
+    TEXT_COLOR: '#ffffff',
+    FONTSIZE: '26px'
+  };
+
+  var backup = [];
   var mapPinMain = document.querySelector('.map__pin--main');
 
   // Добавьте возможность закрытия карточки с подробной информацией по нажатию клавиши Esc и клике по иконке закрытия;
-  var popupEscPressHandler = function (evt) {
-    if (evt.key === ESC_KEY) {
+  var popupEscPressHandler = function (evtEscCard) {
+    if (evtEscCard.key === ESC_KEY) {
       window.card.close();
     }
   };
 
   // Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
-  var pinEnterPressHandler = function (evt, element) {
-    if (evt.key === ENTER_KEY) {
+  var pinEnterPressHandler = function (evtEnterPin, element) {
+    if (evtEnterPin.key === ENTER_KEY) {
       window.card.render(element);
     }
   };
 
-  var pinClickPageActivationHandler = function (evt) {
-    pageActivation(evt.button === LEFT_MOUSE_BUTTON);
+  var pinClickPageActivationHandler = function (evtPinClick) {
+    pageActivation(evtPinClick.button === LEFT_MOUSE_BUTTON);
     mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
     mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
   };
 
-  var pinPressEnterPageActivationHandler = function (evt) {
-    pageActivation(evt.key === ENTER_KEY);
+  var pinPressEnterPageActivationHandler = function (evtPinPress) {
+    pageActivation(evtPinPress.key === ENTER_KEY);
     mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
     mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
   };
@@ -43,13 +53,13 @@
 
   var errorDataReceiveHandler = function (errorMessage) {
     var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: crimson; padding-top: 5px; padding-bottom: 5px';
-    node.style.position = 'absolute';
-    node.style.color = '#ffffff';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.top = '20px';
-    node.style.fontSize = '26px';
+    node.style = ErrorNode.STYLES;
+    node.style.position = ErrorNode.POSITION_STATE;
+    node.style.color = ErrorNode.TEXT_COLOR;
+    node.style.left = ErrorNode.LEFT_POSITION;
+    node.style.right = ErrorNode.RIGHT_POSITION;
+    node.style.top = ErrorNode.TOP_POSITION;
+    node.style.fontSize = ErrorNode.FONTSIZE;
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
   };

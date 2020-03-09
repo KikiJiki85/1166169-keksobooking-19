@@ -14,28 +14,29 @@
   var cardTemplate = document.querySelector('#card').content;
 
   // Функция создания доступных удобств в карточке
-  var createListFeatures = function (node, featuresArr) {
-    node.querySelector('.popup__features').innerHTML = '';
-    for (var i = 0; i < featuresArr.length; i++) {
+  var createListFeatures = function (featureNode, featuresArr) {
+    featureNode.querySelector('.popup__features').innerHTML = '';
+    featuresArr.forEach(function (currentFeatureElement) {
       var featureElement = document.createElement('li');
       featureElement.classList.add('popup__feature');
-      featureElement.classList.add('popup__feature--' + featuresArr[i]);
-      node.querySelector('.popup__features').appendChild(featureElement);
-    }
+      featureElement.classList.add('popup__feature--' + currentFeatureElement);
+      featureNode.querySelector('.popup__features').appendChild(featureElement);
+    });
   };
 
   // Функция создания и отрисовки доступных фотографий в карточке
-  var createListPhotos = function (node, photosArr) {
-    node.querySelector('.popup__photos').innerHTML = '';
-    for (var i = 0; i < photosArr.length; i++) {
+  var createListPhotos = function (listPhotoNode, photosArr) {
+    listPhotoNode.querySelector('.popup__photos').innerHTML = '';
+    photosArr.forEach(function (currentListPhotoElement) {
       var offerPhoto = document.createElement('img');
       offerPhoto.classList.add('popup__photo');
-      offerPhoto.src = photosArr[i];
+      offerPhoto.src = currentListPhotoElement;
       offerPhoto.width = PHOTO_WIDTH;
       offerPhoto.height = PHOTO_HEIGHT;
       offerPhoto.alt = PHOTO_TEXT;
-      node.querySelector('.popup__photos').appendChild(offerPhoto);
-    }
+      listPhotoNode.querySelector('.popup__photos').appendChild(offerPhoto);
+    });
+
   };
 
   var create = function (cardElement) {

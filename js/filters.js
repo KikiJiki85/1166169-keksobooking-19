@@ -12,6 +12,9 @@
   };
 
   var MAX_ADVERTISEMENTS = 5;
+  var FILTER_DEFUALT_VALUE = 'any';
+  var RADIX_VALUE = 10;
+
   var filtersForm = document.querySelector('.map__filters');
   var housingType = filtersForm.querySelector('#housing-type');
   var housingPrice = filtersForm.querySelector('#housing-price');
@@ -34,7 +37,7 @@
 
   // Функция фильтра типа жилья
   var getHousingType = function (typeElement) {
-    return housingType.value === 'any' ? true : typeElement.offer.type === housingType.value;
+    return housingType.value === FILTER_DEFUALT_VALUE ? true : typeElement.offer.type === housingType.value;
   };
 
   // Функция фильтра цены жилья
@@ -53,12 +56,12 @@
 
   // Функция фильтра кол-ва комнат
   var getHousingRooms = function (roomsElement) {
-    return housingRooms.value === 'any' ? true : parseInt(housingRooms.value, 10) === roomsElement.offer.rooms;
+    return housingRooms.value === FILTER_DEFUALT_VALUE ? true : parseInt(housingRooms.value, RADIX_VALUE) === roomsElement.offer.rooms;
   };
 
   // Функция фильтра числа гостей
   var getHousingGuests = function (guestsElement) {
-    return housingGuests.value === 'any' ? true : parseInt(housingGuests.value, 10) === guestsElement.offer.guests;
+    return housingGuests.value === FILTER_DEFUALT_VALUE ? true : parseInt(housingGuests.value, RADIX_VALUE) === guestsElement.offer.guests;
   };
 
   // Функция фильтра дополнительных опций
@@ -73,10 +76,10 @@
   };
 
   var setFilterToDefault = function () {
-    housingType.value = 'any';
-    housingPrice.value = 'any';
-    housingRooms.value = 'any';
-    housingGuests.value = 'any';
+    housingType.value = FILTER_DEFUALT_VALUE;
+    housingPrice.value = FILTER_DEFUALT_VALUE;
+    housingRooms.value = FILTER_DEFUALT_VALUE;
+    housingGuests.value = FILTER_DEFUALT_VALUE;
     housingFeatures.forEach(function (feature) {
       if (feature.checked) {
         feature.checked = false;
