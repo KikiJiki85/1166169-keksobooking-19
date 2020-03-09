@@ -5,7 +5,7 @@
   var SAVE_URL = 'https://js.dump.academy/keksobooking';
   var RESPONSE_TYPE = 'json';
 
-  var statusCodeMap = {
+  var StatusCode = {
     OK: 200
   };
 
@@ -13,7 +13,7 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = RESPONSE_TYPE;
     xhr.addEventListener('load', function () {
-      if (xhr.status === statusCodeMap.OK) {
+      if (xhr.status === StatusCode.OK) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
