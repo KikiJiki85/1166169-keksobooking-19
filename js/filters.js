@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  var MAX_ADVERTISEMENTS = 5;
+  var FILTER_DEFUALT_VALUE = 'any';
+  var RADIX_VALUE = 10;
+
   var priceTypeMap = {
     low: 'low',
     middle: 'middle',
@@ -10,10 +14,6 @@
     min: 10000,
     max: 50000
   };
-
-  var MAX_ADVERTISEMENTS = 5;
-  var FILTER_DEFUALT_VALUE = 'any';
-  var RADIX_VALUE = 10;
 
   var filtersForm = document.querySelector('.map__filters');
   var housingType = filtersForm.querySelector('#housing-type');
@@ -96,8 +96,8 @@
   });
 
   window.filters = {
-    mapFiltersApply: mapFiltersApply,
     MAX_ADVERTISEMENTS: MAX_ADVERTISEMENTS,
+    mapFiltersApply: mapFiltersApply,
     setFilterToDefault: setFilterToDefault
   };
 })();

@@ -5,6 +5,9 @@
   var MAP_PIN_Y_START = '375px';
   var RADIX_VALUE = 10;
   var AVATAR_SRC = 'img/muffin-grey.svg';
+  var FIELD_MIN_LENGTH = 30;
+  var FIELD_MAX_LENGTH = 100;
+  var FIELD_MAX_VALUE = 1000000;
 
   var housingTypeMinCostMap = {
     'palace': '10000',
@@ -76,9 +79,9 @@
   // Перевод ошибок ввода на русский язык - событие invalid
   adHeader.addEventListener('invalid', function () {
     if (adHeader.validity.tooShort) {
-      adHeader.setCustomValidity('Минимальная длина — 30 символов');
+      adHeader.setCustomValidity('Минимальная длина — ' + FIELD_MIN_LENGTH + 'символов');
     } else if (adHeader.validity.tooLong) {
-      adHeader.setCustomValidity('Максимальная длина — 100 символов');
+      adHeader.setCustomValidity('Максимальная длина — ' + FIELD_MAX_LENGTH + ' символов');
     } else if (adHeader.validity.valueMissing) {
       adHeader.setCustomValidity('Обязательное поле');
     } else {
@@ -89,7 +92,7 @@
 
   adPricePerNight.addEventListener('invalid', function () {
     if (adPricePerNight.validity.rangeOverflow) {
-      adPricePerNight.setCustomValidity('Максимальное значение — 1 000 000');
+      adPricePerNight.setCustomValidity('Максимальное значение — ' + FIELD_MAX_VALUE);
     } else if (adPricePerNight.validity.rangeUnderflow) {
       adPricePerNight.setCustomValidity('Минимальное значение - ' + adPricePerNight.placeholder);
     } else if (adPricePerNight.validity.valueMissing) {
