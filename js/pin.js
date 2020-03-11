@@ -35,12 +35,12 @@
   };
 
   var render = function (array) {
-    array.length >= MAX_ADVERTISEMENTS ? renderCounter = MAX_ADVERTISEMENTS : renderCounter = array.length;
+    renderCounter = array.length >= MAX_ADVERTISEMENTS ? MAX_ADVERTISEMENTS : array.length;
     for (var i = 0; i < renderCounter; i++) {
       if (array[i].offer) {
         document.querySelector('.map__pins').appendChild(create(array[i]));
       }
-    };
+    }
   };
 
   var remove = function () {
