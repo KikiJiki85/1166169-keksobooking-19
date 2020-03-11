@@ -2,13 +2,11 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  // Установка фотографии жилья фоном
   var setBackground = function (element, data) {
     element.style.backgroundSize = 'cover';
     element.style.backgroundImage = 'url(' + data + ')';
   };
 
-  // Функция загрузки фото
   var uploadPhoto = function (chooser, preview) {
     var file = chooser.files[0];
     var fileName = file.name.toLowerCase();

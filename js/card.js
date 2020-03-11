@@ -65,6 +65,7 @@
 
   var close = function () {
     if (document.querySelector('.map__card')) {
+      window.pin.removeSelection();
       document.querySelector('.map__card').remove();
       document.removeEventListener('keydown', window.map.popupEscPressHandler);
     }
