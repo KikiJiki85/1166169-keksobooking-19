@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-  var MAX_ADVERTISEMENTS = 5;
   var FILTER_DEFUALT_VALUE = 'any';
   var RADIX_VALUE = 10;
 
@@ -22,7 +21,6 @@
   var housingGuests = filtersForm.querySelector('#housing-guests');
   var housingFeatures = filtersForm.querySelectorAll('.map__checkbox');
 
-  // Основная функция фильтрации входных данных
   var mapFiltersApply = function (data) {
     return data.filter(function (currentElement) {
       return (
@@ -32,15 +30,13 @@
         getHousingGuests(currentElement) &&
         getHousingFeatures(currentElement)
       );
-    }).slice(0, MAX_ADVERTISEMENTS);
+    });
   };
 
-  // Функция фильтра типа жилья
   var getHousingType = function (typeElement) {
     return housingType.value === FILTER_DEFUALT_VALUE ? true : typeElement.offer.type === housingType.value;
   };
 
-  // Функция фильтра цены жилья
   var getHousingPrice = function (priceElement) {
     switch (housingPrice.value) {
       case priceTypeMap.low:
@@ -54,17 +50,14 @@
     }
   };
 
-  // Функция фильтра кол-ва комнат
   var getHousingRooms = function (roomsElement) {
     return housingRooms.value === FILTER_DEFUALT_VALUE ? true : parseInt(housingRooms.value, RADIX_VALUE) === roomsElement.offer.rooms;
   };
 
-  // Функция фильтра числа гостей
   var getHousingGuests = function (guestsElement) {
     return housingGuests.value === FILTER_DEFUALT_VALUE ? true : parseInt(housingGuests.value, RADIX_VALUE) === guestsElement.offer.guests;
   };
 
-  // Функция фильтра дополнительных опций
   var getHousingFeatures = function (featuresElement) {
     var result = true;
     housingFeatures.forEach(function (currentFeature) {
@@ -96,7 +89,6 @@
   });
 
   window.filters = {
-    MAX_ADVERTISEMENTS: MAX_ADVERTISEMENTS,
     mapFiltersApply: mapFiltersApply,
     setFilterToDefault: setFilterToDefault
   };

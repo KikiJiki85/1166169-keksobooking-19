@@ -18,16 +18,14 @@
   };
 
   var backup = [];
-  var mapPinMain = document.querySelector('.map__pin--main');
+  var pinMain = document.querySelector('.map__pin--main');
 
-  // Добавьте возможность закрытия карточки с подробной информацией по нажатию клавиши Esc и клике по иконке закрытия;
   var popupEscPressHandler = function (evtEscCard) {
     if (evtEscCard.key === ESC_KEY) {
       window.card.close();
     }
   };
 
-  // Добавьте поддержку открытия карточки объявления с клавиатуры. Карточка объявления для выбранной метки открывается при нажатии на клавишу Enter.
   var pinEnterPressHandler = function (evtEnterPin, element) {
     if (evtEnterPin.key === ENTER_KEY) {
       window.card.render(element);
@@ -36,19 +34,19 @@
 
   var pinClickPageActivationHandler = function (evtPinClick) {
     pageActivation(evtPinClick.button === LEFT_MOUSE_BUTTON);
-    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
-    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+    pinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    pinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
   };
 
   var pinPressEnterPageActivationHandler = function (evtPinPress) {
     pageActivation(evtPinPress.key === ENTER_KEY);
-    mapPinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
-    mapPinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
+    pinMain.removeEventListener('mousedown', pinClickPageActivationHandler);
+    pinMain.removeEventListener('keydown', pinPressEnterPageActivationHandler);
   };
 
   var successDataReceiveHandler = function (data) {
     window.map.backup = data;
-    window.pin.render(data.slice(0, window.filters.MAX_ADVERTISEMENTS));
+    window.pin.render(data);
   };
 
   var errorDataReceiveHandler = function (errorMessage) {
@@ -64,7 +62,6 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  // Функция перевода страницы в активное состояние п 1.2 ТЗ
   var setActiveState = function () {
     if (document.querySelector('.map--faded')) {
       document.querySelector('.map--faded').classList.remove('map--faded');
@@ -79,7 +76,6 @@
     }
   };
 
-  // Функция перевода страницы в активное состояние п 1.2 ТЗ
   var setPassiveState = function () {
     if (!document.querySelector('.map--faded')) {
       document.querySelector('.map').classList.add('map--faded');
@@ -98,12 +94,10 @@
     }
   };
 
-  // Активация страницы
-  mapPinMain.addEventListener('mousedown', pinClickPageActivationHandler);
-  mapPinMain.addEventListener('keydown', pinPressEnterPageActivationHandler);
+  pinMain.addEventListener('mousedown', pinClickPageActivationHandler);
+  pinMain.addEventListener('keydown', pinPressEnterPageActivationHandler);
 
 
-  // Установка неактивного состояния п 1.1 ТЗ
   setPassiveState();
 
   window.map = {
@@ -115,6 +109,7 @@
     setActiveState: setActiveState,
     setPassiveState: setPassiveState,
     backup: backup,
+    pinMain: pinMain,
     popupEscPressHandler: popupEscPressHandler,
     pinEnterPressHandler: pinEnterPressHandler,
     pinClickPageActivationHandler: pinClickPageActivationHandler,

@@ -13,7 +13,6 @@
 
   var cardTemplate = document.querySelector('#card').content;
 
-  // Функция создания доступных удобств в карточке
   var createListFeatures = function (featureNode, featuresArr) {
     featureNode.querySelector('.popup__features').innerHTML = '';
     featuresArr.forEach(function (currentFeatureElement) {
@@ -24,7 +23,6 @@
     });
   };
 
-  // Функция создания и отрисовки доступных фотографий в карточке
   var createListPhotos = function (listPhotoNode, photosArr) {
     listPhotoNode.querySelector('.popup__photos').innerHTML = '';
     photosArr.forEach(function (currentListPhotoElement) {
@@ -58,7 +56,6 @@
     return newCard;
   };
 
-  // Функция подготовки шаблона карточки объявления и ее вставки на страницу (метод отрисовки карточки)
   var render = function (cardElement) {
     close(cardElement);
     if (!document.querySelector('.map__card')) {
@@ -66,7 +63,6 @@
     }
   };
 
-  // Функция закрытия(удаления) карточки
   var close = function () {
     if (document.querySelector('.map__card')) {
       document.querySelector('.map__card').remove();

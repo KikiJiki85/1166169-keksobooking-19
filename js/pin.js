@@ -2,9 +2,10 @@
 (function () {
   var PIN_CENTER_WIDTH = 25;
   var PIN_CENTER_HEIGHT = 70;
+  var MAX_ADVERTISEMENTS = 5;
   var pinTemplate = document.querySelector('#pin').content;
+  var renderCounter = 0;
 
-  // Функция создание пина
   var create = function (pinElement) {
     var pinTemplateObject = pinTemplate.querySelector('.map__pin');
     var newPin = pinTemplateObject.cloneNode(true);
@@ -14,19 +15,28 @@
     newPin.querySelector('img').alt = pinElement.offer.title;
     newPin.addEventListener('click', function () {
       window.card.render(pinElement);
+      // newPin.classList.add('map__pin--active');
     });
     newPin.addEventListener('keydown', window.map.pinEnterPressHandler(pinElement));
     return newPin;
   };
 
-  // Функция отрисовки пина
   var render = function (array) {
-    array.forEach(function (currentRenderElement) {
-      if (currentRenderElement.offer) {
-        document.querySelector('.map__pins').appendChild(create(currentRenderElement));
+    array.length >= MAX_ADVERTISEMENTS ? renderCounter = MAX_ADVERTISEMENTS : renderCounter = array.length;
+    for (var i = 0; i < renderCounter; i++) {
+      if (array[i].offer) {
+        document.querySelector('.map__pins').appendChild(create(array[i]));
       }
-    });
+    };
   };
+
+  // var render = function (array) {
+  //   array.forEach(function (currentRenderElement) {
+  //     if (currentRenderElement.offer) {
+  //       document.querySelector('.map__pins').appendChild(create(currentRenderElement));
+  //     }
+  //   });
+  // };
 
   var remove = function () {
     var allRenderedPins = document.querySelectorAll('.map__pin');

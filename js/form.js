@@ -39,24 +39,22 @@
   var housePhotoChooser = adForm.querySelector('.ad-form__upload input[type=file]');
   var mainMsg = document.querySelector('main');
 
-  // Функция установки соответствия количества комнат и количества гостей
   var validateGuests = function () {
-    var validGuestsOptions = roomsForGuestsMap[rooms.value]; // Валидные опции из словаря
-    var guestsOptions = guests.querySelectorAll('option'); // Находим все опции по количеству мест (гостям)
-    guestsOptions.forEach(function (currentOption) { // Перебор всех доступных опций в коллекции
-      currentOption.disabled = true; // Блокируем все по-умолчанию
-      currentOption.selected = false; // Сбрасываем выбор selected
-      var index = validGuestsOptions.indexOf(currentOption.value); // Находим в списке валидных опций нашу опцию
+    var validGuestsOptions = roomsForGuestsMap[rooms.value];
+    var guestsOptions = guests.querySelectorAll('option');
+    guestsOptions.forEach(function (currentOption) {
+      currentOption.disabled = true;
+      currentOption.selected = false;
+      var index = validGuestsOptions.indexOf(currentOption.value);
       if (index >= 0) {
-        currentOption.disabled = false; // Разблокировка опции, если она есть в словаре
+        currentOption.disabled = false;
         if (index === 0) {
-          currentOption.selected = true; // Первый элемент выставляем в selected
+          currentOption.selected = true;
         }
       }
     });
   };
 
-  // 3.3 Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь»:
   var validateHousingTypes = function () {
     var selectedRoomTypes = roomType.querySelectorAll('option');
     selectedRoomTypes.forEach(function (currentHousingOption) {
@@ -67,7 +65,6 @@
     });
   };
 
-  // 3.5. Поля «Время заезда» и «Время выезда» синхронизированы: при изменении значения одного поля, во втором выделяется соответствующее ему. Например, если время заезда указано «после 14», то время выезда будет равно «до 14» и наоборот.
   var validateCheckOut = function () {
     timeOut.value = timeIn.value;
   };
@@ -76,7 +73,6 @@
     timeIn.value = timeOut.value;
   };
 
-  // Перевод ошибок ввода на русский язык - событие invalid
   adHeader.addEventListener('invalid', function () {
     if (adHeader.validity.tooShort) {
       adHeader.setCustomValidity('Минимальная длина — ' + FIELD_MIN_LENGTH + 'символов');
@@ -85,7 +81,6 @@
     } else if (adHeader.validity.valueMissing) {
       adHeader.setCustomValidity('Обязательное поле');
     } else {
-      // Самое главное при работе с обработчиками валидации — не забыть сбросить значение поля, если это значение стало корректно.
       adHeader.setCustomValidity('');
     }
   });
@@ -102,7 +97,6 @@
     }
   });
 
-  // Обработчик показа и закрытия окна об успешной отправке формы
   var successDataSendHandler = function () {
     var successMsgDiv = document.querySelector('#success').content.querySelector('.success');
     var newMsg = successMsgDiv.cloneNode(true);
@@ -126,7 +120,6 @@
     document.addEventListener('click', successDivClickHandler);
     document.addEventListener('keydown', successDivEscPressHandler);
 
-    // После успешной передачи данных на сервер верните страницу в неактивное состояние и сбросьте форму.
     window.pin.remove();
     window.card.close();
     window.filters.setFilterToDefault();
@@ -146,7 +139,6 @@
     housePhotoPreview.style.backgroundImage = '';
   };
 
-  // Обработчик показа и закрытия окна о неудачной отправке формы
   var errorDataSendHandler = function () {
     var errorMsgDiv = document.querySelector('#error').content.querySelector('.error');
     var newErrorMsg = errorMsgDiv.cloneNode(true);
@@ -178,7 +170,6 @@
     document.addEventListener('click', errorDivClickHandler);
   };
 
-  // Обработчик отправки формы и возврата первоначального состояния
   adForm.addEventListener('submit', function (evtSend) {
     window.backend.sendRequest(successDataSendHandler, errorDataSendHandler, 'POST', window.backend.SAVE_URL, new FormData(adForm));
     evtSend.preventDefault();
@@ -192,16 +183,13 @@
     window.form.setPinAdress(window.map.PIN_POINTER_X, window.map.PIN_POINTER_Y);
   };
 
-  // Сброс формы по клику на кнопку очистить
   resetForm.addEventListener('click', resetFormHandler);
-  // Сброс формы по нажатию на ENTER при фокусе на кнопке
   resetForm.addEventListener('keydown', function (evtFormPressReset) {
     if (evtFormPressReset.key === window.map.ENTER_KEY) {
       resetFormHandler();
     }
   });
 
-  // Функция скрытия-показа элементов управления формы (input, select и т. д. должны быть неактивны в исходном состоянии)
   var setFormDisableAttr = function (form, field, attrStatus) {
     var inputArray = document.querySelector(form).querySelectorAll(field);
     inputArray.forEach(function (currentElement) {
@@ -209,17 +197,14 @@
     });
   };
 
-  // Функция установки поля ввода адреса
   var setPinAdress = function (xOffset, yOffset) {
     document.querySelector('#address').value = Math.round(parseInt(mapPinMain.style.left, RADIX_VALUE) + xOffset) + ', ' + Math.round(parseInt(mapPinMain.style.top, RADIX_VALUE) + yOffset);
   };
 
-  // Обработчик загрузки аватарки
   var uploadAvatarHandler = function () {
     window.images.uploadPhoto(avatarChooser, avatarPreview);
   };
 
-  // Обработчик загрузки картинки жилья
   var uploadHousePhotoHandler = function () {
     window.images.uploadPhoto(housePhotoChooser, housePhotoPreview);
   };
@@ -228,7 +213,6 @@
   avatarChooser.addEventListener('change', uploadAvatarHandler);
   housePhotoChooser.addEventListener('change', uploadHousePhotoHandler);
 
-  // Сценарий установки соответствия количества гостей (спальных мест) с количеством комнат
   rooms.addEventListener('change', function () {
     validateGuests();
   });
